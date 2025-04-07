@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Name Checker</title>
+  <script>
+    const checkCompanyName = async (companyName, companyType) => {
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwjHKdXnnrVIqKxi1gB0JRLIZnabMcHqBIx4jOpU4ZzDH_EWSMv8DIajeIQxJEdMzGO-g/exec'; // Replace with your Google Apps Script URL
+      const response = await fetch(`${scriptUrl}?companyName=${companyName}&companyType=${companyType}`);
+      const data = await response.json();
+
+      const statusMessage = document.getElementById('statusMessage');
+      if (data.status === "taken") {
+        statusMessage.innerHTML = "This company name is already taken.";
+        statusMessage.style.color = 'red';
+      } else {
+        statusMessage.innerHTML = "This company name is available!";
+        statusMessage.style.color = 'green';
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('companyNameField').addEventListener('input', function () {
+        const companyName = document.getElementById('companyNameField').value;
+        const companyType = document.getElementById('companyTypeField').value;
+        checkCompanyName(companyName, companyType);
+      });
+
+      document.getElementById('companyTypeField').addEventListener('change', function () {
+        const companyName = document.getElementById('companyNameField').value;
+        const companyType = document.getElementById('companyTypeField').value;
+        checkCompanyName(companyName, companyType);
+      });
+    });
+  </script>
+</head>
+<body>
+  <label for="companyNameField">Company Name:</label>
+  <input type="text" id="companyNameField" name="companyName">
+  <br>
+
+  <label for="companyTypeField">Company Type:</label>
+  <select id="companyTypeField" name="companyType">
+    <option value="LLC">LLC</option>
+    <option value="Corporation">Corporation</option>
+    <option value="Partnership">Partnership</option>
+  </select>
+  <br>
+
+  <div id="statusMessage"></div>
+</body>
+</html>
